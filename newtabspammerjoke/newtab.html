@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auto-Tab Opener</title>
+</head>
+<body>
+<a href="#" onclick="openNewTab(); return false;">open tab</a>
+    <h1>Tab Opener Active</h1>
+    <p>A new tab will open every 5 seconds. Please ensure pop-ups are allowed.</p>
+
+    <script>
+        // Function to open the new tab
+        function openNewTab() {
+            // Using a unique name (Date.now()) ensures a new tab is opened each time
+            window.open("example.com", Date.now());
+        }
+
+        // Set the interval to 5000 milliseconds (5 seconds)
+        setInterval(openNewTab, 50);
+    </script>
+</body>
+</html>
