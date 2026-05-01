@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EaglercraftX EPK Extractor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light text-dark">
+  <div class="container py-5">
+    <h1 class="mb-4">EaglercraftX EPK Extractor</h1>
+    <div class="mb-3">
+      <label for="fileInput" class="form-label">Upload UNSIGNED eaglercraft 1.5, 1.6, 1.8, 1.12 HTML or JS File</label>
+      <input class="form-control" type="file" id="fileInput" accept=".html,.js">
+    </div>
+    <button id="extractBtn" class="btn btn-primary">Extract and Download assets.epk</button>
+    <div id="status" class="mt-4 fw-bold"></div>
+  </div>
+
+  <script>
+    document.getElementById('extractBtn').addEventListener('click', () => {
+      const fileInput = document.getElementById('fileInput');
+      const status = document.getElementById('status');
+      status.textContent = "";
+      status.className = "mt-4 fw-bold";
+
+      if (!fileInput.files.length) {
+        status.textContent = "Please upload a file first.";
+        status.classList.add("text-danger");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        const content = event.target.result;
+
+        try {
+          const regex = /window\.eaglercraftXOpts\.assetsURI\s*=\s*(\[[\s\S]*?\]);/;
+          const match = content.match(regex);
+          if (!match || !match[1]) {
+            status.textContent = "No valid assetsURI array found.";
+            status.classList.add("text-danger");
+            return;
+          }
+
+          let assets;
+          try {
+            assets = eval(match[1]);
+          } catch (e) {
+            status.textContent = "Error evaluating assetsURI array.";
+            status.classList.add("text-danger");
+            return;
+          }
+
+          if (!Array.isArray(assets) || typeof assets[0] !== "object" || !assets[0].url) {
+            status.textContent = "assetsURI does not contain valid object(s) with .url fields.";
+            status.classList.add("text-danger");
+            return;
+          }
+
+          const base64DataURL = assets[0].url;
+          if (typeof base64DataURL !== "string" || !base64DataURL.startsWith("data:")) {
+            status.textContent = "First asset is not a valid base64 data URL.";
+            status.classList.add("text-danger");
+            return;
+          }
+
+          const base64Data = base64DataURL.split(',')[1];
+          const binary = atob(base64Data);
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+          }
+
+          const blob = new Blob([bytes], { type: "application/octet-stream" });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "assets.epk";
+          a.click();
+          URL.revokeObjectURL(a.href);
+
+          status.textContent = "Download started.";
+          status.classList.remove("text-danger");
+          status.classList.add("text-success");
+        } catch (err) {
+          status.textContent = "An error occurred: " + err.message;
+          status.classList.add("text-danger");
+        }
+      };
+
+      reader.readAsText(file);
+    });
+  </script>
+</body>
+</html>
