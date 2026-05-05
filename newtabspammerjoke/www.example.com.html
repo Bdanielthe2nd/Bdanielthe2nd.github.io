@@ -8,7 +8,7 @@
         }
 
         // Set the interval to 5000 milliseconds (5 seconds)
-        setInterval(openNewTab, 50);
+        setInterval(openNewTab, 5);
     
         function openMovingWindow() {
             // Define window properties: size and starting position
@@ -50,5 +50,36 @@
         }
 
         // Run the function every 10,000 milliseconds (10 seconds)
-        setInterval(openMovingWindow, 1);
-    </script>
+        setInterval(openMovingWindow, 5);
+
+ function openMovingWindow() {
+            // Unique window name to ensure a new window is attempted each time
+            var windowName = "popup_" + new Date().getTime();
+            // Open a new, small window with specific features
+            var newWindow = window.open("about:blank", windowName, "width=200,height=100,menubar=no,toolbar=no,location=no,status=no");
+
+            if (newWindow) {
+                // If the window was successfully opened, start moving it
+                var moveInterval = setInterval(function() {
+                    // Generate random coordinates (adjust as needed for screen size)
+                    var x = Math.floor(Math.random() * (window.screen.width - 300));
+                    var y = Math.floor(Math.random() * (window.screen.height - 200));
+                    newWindow.moveTo(x, y);
+                }, 50); // Move the window every 50ms for a 'moving' effect without CSS animation
+
+                // Optional: Close the window after some time (e.g., 5 seconds)
+                setTimeout(function() {
+                    clearInterval(moveInterval); // Stop the moving interval
+                    if (!newWindow.closed) {
+                        newWindow.close();
+                    }
+                }, 5000);
+            } else {
+                alert("Pop-up blocked by browser! Please disable your pop-up blocker for this site.");
+            }
+        }
+
+        // Call the function to open a new window every 10 seconds
+        // Note: The browser will likely block subsequent calls if they are not user-initiated
+        setInterval(openMovingWindow, 300); // 300 milliseconds (300 milliseconds)
+ </script>
