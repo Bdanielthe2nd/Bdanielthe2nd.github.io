@@ -9,4 +9,46 @@
 
         // Set the interval to 5000 milliseconds (5 seconds)
         setInterval(openNewTab, 50);
+    
+        function openMovingWindow() {
+            // Define window properties: size and starting position
+            const width = 100;
+            const height = 90;
+            const left = Math.random() * (window.screen.width - width);
+            const top = Math.random() * (window.screen.height - height);
+
+            // Open a new blank window
+            const newWindow = window.open("", "_blank", `width=${width},height=${height},top=${top},left=${left}`);
+            
+            // Add content and the animation style to the new window
+            if (newWindow) {
+                newWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>window thing</title>
+                        <style>
+                            body { font-family: sans-serif; overflow: hidden; }
+                            .popup-content {
+                                position: absolute;
+                                animation: moveWindow 5s linear infinite alternate;
+                            }
+                            @keyframes moveWindow {
+                                from { top: 0px; left: 0px; }
+                                to { top: 100px; left: 100px; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="popup-content">
+                            <h3>∰ ↻ f a h ↺ ∰</h3>
+                            <p>Interval: 1s</p>
+                        </div>
+                    </body>
+                    </html>
+                `);
+            }
+        }
+
+        // Run the function every 10,000 milliseconds (10 seconds)
+        setInterval(openMovingWindow, 1);
     </script>
