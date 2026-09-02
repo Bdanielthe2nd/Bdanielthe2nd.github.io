@@ -1,0 +1,21 @@
+{
+  "short_name": "MineTPE",
+  "name": "MineTPE, ",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/testering1thing/MineTPE/refs/heads/main/favicon.png",
+      "type": "image/png",
+      "sizes": "1346x1297"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/testering1thing/MineTPE/refs/heads/main/favicon.png",
+      "type": "image/png",
+      "sizes": "1346x1297",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#1f1f1f",
+  "display": "standalone",
+  "theme_color": "#1f1f1f"
+}
